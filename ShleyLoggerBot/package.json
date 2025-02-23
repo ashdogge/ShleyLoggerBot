@@ -1,23 +1,23 @@
 {
   "name": "ShleyLoggerBot",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^1.7.9",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "dotenv": "^16.4.7",
-    "express": "~4.16.1",
+    "express": "^4.21.2",
     "morgan": "~1.9.1"
   },
   "devDependencies": {
     "prettier": "^2.2.1"
   },
   "main": "app.js",
-  "author": "",
+  "author": "Shley",
   "license": "ISC",
-  "description": ""
+  "description": "Simple webserver and interface for logging Conan Exiles messages from !ToT"
 }
