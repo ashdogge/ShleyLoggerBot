@@ -1,6 +1,6 @@
 {
   "name": "ShleyLoggerBot",
-  "version": "1.5.0",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
@@ -17,7 +17,7 @@
     "prettier": "^2.2.1"
   },
   "main": "app.js",
-  "author": "",
+  "author": "Shley",
   "license": "ISC",
-  "description": ""
+  "description": "Simple webserver and interface for logging Conan Exiles messages from !ToT"
 }
