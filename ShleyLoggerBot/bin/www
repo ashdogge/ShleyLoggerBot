@@ -7,6 +7,144 @@
 var app = require("../app");
 var debug = require("debug")("webserver:server");
 var http = require("http");
+const readline = require("readline");
+const fs = require("fs");
+const path = require("path");
+const { execSync } = require("child_process");
+const envFilePath = path.join(__dirname, "../.env");
+const LOCAL_VERSION = process.env.LOGGER_VERSION || "1.0.0"; // Local version from .env
+const { spawn } = require("child_process");
+const https = require("https");
+const { rl, displayPrompt, handleMenuInput } = require("./menu");
+//Function to restart after running setup
+function restartProcess() {
+  console.log("Restarting process...");
+  // Spawn a new process running the same command-line arguments
+  const child = spawn(process.argv[0], process.argv.slice(1), {
+    detached: true,
+    stdio: "inherit",
+  });
+  child.unref(); // Allow the child to keep running after the parent exits
+  process.exit(0);
+}
+
+// Check if .env exists
+if (!fs.existsSync(envFilePath)) {
+  console.log(".env not found. Running setup.js to create one...");
+  try {
+    // Execute setup.js and show its output in the console
+    execSync("node setup.js", { stdio: "inherit" });
+    restartProcess();
+  } catch (error) {
+    console.error("Error running setup.js:", error);
+    process.exit(1);
+  }
+}
+// //Create readline interface
+// const rl = readline.createInterface({
+//   input: process.stdin,
+//   output: process.stdout,
+//   prompt: "> ",
+// });
+// 'main' or 'settings' state
+// let currentMenu = "main";
+
+// // Display prompt for the current menu
+// function displayPrompt() {
+//   if (currentMenu === "main") {
+//     console.log(`Server running on http://localhost:${port}`);
+//     console.log(
+//       "╔═════════════════════════════════════════════════════════════════════════════════╗\n" +
+//         "║  Main Menu - available commands:\n║ 1) Help\n║ 2) Settings\n║ 3) Quit" +
+//         " ".repeat(73) +
+//         "║\n" +
+//         "╚═════════════════════════════════════════════════════════════════════════════════╝"
+//     );
+//   } else if (currentMenu === "settings") {
+//     console.log(
+//       "Settings Menu - options:\n1) Toggle timestamps\n2) Change Port\n3) Back to main"
+//     );
+//   }
+//   rl.prompt();
+// }
+// Handle user input in the command-line menu
+rl.on("line", (line) => {
+  handleMenuInput(line, settingToggler, port);
+});
+// rl.on("line", (line) => {
+//   const command = line.trim();
+//   //Main menu
+//   if (currentMenu === "main") {
+//     switch (command) {
+//       case "1":
+//         console.log("Available commands: help, settings, exit");
+//         break;
+//       case "2":
+//         currentMenu = "settings";
+//         break;
+//       case "3":
+//         process.exit(0);
+//         break;
+//       default:
+//         console.log(`Unknown command: ${command}`);
+//         break;
+//     }
+//     //Settings menu
+//   } else if (currentMenu === "settings") {
+//     switch (command) {
+//       case "1":
+//         settingToggler("1");
+//         break;
+//       case "2":
+//         console.log("Settings option 2 selected.");
+//         break;
+//       case "3":
+//         // Return to main menu
+//         currentMenu = "main";
+//         break;
+//       default:
+//         console.log(`Unknown settings command: ${command}`);
+//         break;
+//     }
+//   }
+//   displayPrompt();
+// });
+
+// handles settings toggle condition
+
+function settingToggler(setting) {
+  fs.readFile(envFilePath, "utf8", (err, data) => {
+    if (err) {
+      console.error("Error reading .env file:", err);
+      rl.prompt();
+      return;
+    }
+
+    let newData;
+    if ((setting = "1")) {
+      if (data.includes("TIMESTAMPS=true")) {
+        newData = data.replace("TIMESTAMPS=true", "TIMESTAMPS=false");
+        console.log("TIMESTAMPS turned on.");
+      } else if (data.includes("TIMESTAMPS=false")) {
+        newData = data.replace("TIMESTAMPS=false", "TIMESTAMPS=true");
+        console.log("TIMESTAMPS turned off.");
+      } else {
+        console.log("No condition setting found in .env.");
+        rl.prompt();
+        return;
+      }
+    }
+
+    fs.writeFile(envFilePath, newData, (err) => {
+      if (err) {
+        console.error("Error writing to .env file:", err);
+      } else {
+        console.log("Successfully updated .env file.");
+      }
+      rl.prompt();
+    });
+  });
+}
 
 /**
  * Get port from environment and store in Express.
@@ -26,11 +164,22 @@ var server = http.createServer(app);
  */
 
 server.listen(port, () => {
-  console.log(`🚀 Server running on http://localhost:${port}`);
+  console.log(`😤 Server started on http://localhost:${port} 😤\n\n\n`);
+  console.log(
+    "╔═══╗╔═╗ ╔═╗╔═╗   ╔════╗╔═╗ ╔═╗╔═╗   ╔═════╗╔═════╗╔═════╗╔════╗╔═══╗\n" +
+      "║ ╔═╝║ ║ ║ ║║ ║   ║ ╔══╝║ ║ ║ ║║ ║   ║ ╔═╗ ║║ ╔═══╝║ ╔═══╝║ ╔══╝║╔╗ ║\n" +
+      "║ ╚═╗║ ╚═╝ ║║ ║   ║ ╚══╗║ ╚═╝ ║║ ║   ║ ║ ║ ║║ ║╔══╗║ ║╔══╗║ ╚══╗║║╝═╣\n" +
+      "╚═╗ ║║ ╔═╗ ║║ ║   ║ ╔══╝╚═╗ ╔═╝║ ║   ║ ║ ║ ║║ ║╚╗ ║║ ║╚╗ ║║ ╔══╝║║╗ ║  ╔═╗ ╔═╗\n" +
+      "╔═╝ ║║ ║ ║ ║║ ╚══╗║ ╚══╗  ║ ║  ║ ╚══╗║ ╚═╝ ║║ ╚═╝ ║║ ╚═╝ ║║ ╚══╗║║║ ║  ╔═╝ ║ ║\n" +
+      "╚═══╝╚═╝ ╚═╝╚════╝╚════╝  ╚═╝  ╚════╝╚═════╝╚═════╝╚═════╝╚════╝╚╝╚═╝  ╚═╝*╚═╝\n" +
+      "              Running on         https://apiconan.totchinuko.fr/\n" +
+      "              An app by          https://shleys.bhweb.ws/"
+  );
+  checkLoggerVersion();
+  displayPrompt(port);
 });
 server.on("error", onError);
 server.on("listening", onListening);
-
 /**
  * Normalize a port into a number, string, or false.
  */
@@ -85,4 +234,37 @@ function onListening() {
   var addr = server.address();
   var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
   debug("Listening on " + bind);
+}
+
+function checkLoggerVersion() {
+  const url = "https://shleys.bhweb.ws/api/loggerVersionCheck"; // API endpoint
+
+  https
+    .get(url, (res) => {
+      let data = "";
+
+      // Collect data
+      res.on("data", (chunk) => {
+        data += chunk;
+      });
+
+      // Process response
+      res.on("end", () => {
+        try {
+          const response = JSON.parse(data);
+          const latestVersion = response.version;
+          // Compare versions using semver (if versions follow semantic versioning)
+          if (latestVersion != LOCAL_VERSION) {
+            console.log(
+              "A NEWER VERSION IS AVAILABLE! Update recommended.\nhttps://github.com/ashdogge/ShleyLoggerBot/"
+            );
+          }
+        } catch (error) {
+          console.error("Error parsing version response:", error);
+        }
+      });
+    })
+    .on("error", (error) => {
+      console.error("Error fetching logger version:", error.message);
+    });
 }
