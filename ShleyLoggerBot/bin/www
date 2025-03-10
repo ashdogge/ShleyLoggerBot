@@ -124,10 +124,10 @@ function settingToggler(setting) {
     if ((setting = "1")) {
       if (data.includes("TIMESTAMPS=true")) {
         newData = data.replace("TIMESTAMPS=true", "TIMESTAMPS=false");
-        console.log("TIMESTAMPS turned on.");
+        console.log("TIMESTAMPS turned off.");
       } else if (data.includes("TIMESTAMPS=false")) {
         newData = data.replace("TIMESTAMPS=false", "TIMESTAMPS=true");
-        console.log("TIMESTAMPS turned off.");
+        console.log("TIMESTAMPS turned on.");
       } else {
         console.log("No condition setting found in .env.");
         rl.prompt();
@@ -169,9 +169,9 @@ server.listen(port, () => {
     "╭─────╮╭─╮ ╭─╮╭─╮  ╭────╮╭─╮ ╭─╮╭─╮  ╭───╮╭─────╮╭─────╮╭────╮╭────╮\n" +
       "│ ╭───╯│ │ │ ││ │  │ ╭──╯│ │ │ ││ │  │╭─╮││ ╭───╯│ ╭───╯│ ╭──╯│ ╭╮ │ \n" +
       "│ ╰───╮│ ╰─╯ ││ │  │ ╰──╮│ ╰─╯ ││ │  ││ │││ │╭──╮│ │╭──╮│ ╰──╮│ ╭┬┬╯\n" +
-      "╰───╮ ││ ╭─╮ ││ │  │ ╭──╯╰─╮ ╭─╯│ │  ││ │││ │╰╮ ││ │╰╮ ││ ╭──╯│ ││╰╮ ─╮ ╭─  ╭─╮\n" +
-      "╭───╯ ││ │ │ ││ ╰─╮│ ╰──╮  │ │  │ ╰─╮│╰─╯││ ╰─╯ ││ ╰─╯ ││ ╰──╮│ ││ │╭─╯ ╰─╮ │┃│\n" +
-      "╰─────╯╰─╯ ╰─╯╰───╯╰────╯  ╰─╯  ╰───╯╰───╯╰─────╯╰─────╯╰────╯╰─╯╰─╯╰─ *╰─╯*╰─╯\n" +
+      "╰───╮ ││ ╭─╮ ││ │  │ ╭──╯╰─╮ ╭─╯│ │  ││ │││ │╰╮ ││ │╰╮ ││ ╭──╯│ ││╰╮ ─╮ ╭─  ─╮\n" +
+      "╭───╯ ││ │ │ ││ ╰─╮│ ╰──╮  │ │  │ ╰─╮│╰─╯││ ╰─╯ ││ ╰─╯ ││ ╰──╮│ ││ │╭─╯ ╰─╮  │ \n" +
+      "╰─────╯╰─╯ ╰─╯╰───╯╰────╯  ╰─╯  ╰───╯╰───╯╰─────╯╰─────╯╰────╯╰─╯╰─╯╰─ *╰─╯*─┴─\n" +
       "              Running on         https://apiconan.totchinuko.fr/\n" +
       "              An app by          https://shleys.bhweb.ws/"
   );
@@ -256,7 +256,7 @@ function checkLoggerVersion() {
           // Compare versions using semver (if versions follow semantic versioning)
           if (latestVersion != LOCAL_VERSION) {
             console.log(
-              "A NEWER VERSION IS AVAILABLE! Update recommended.\nhttps://github.com/ashdogge/ShleyLoggerBot/"
+              `A NEWER VERSION ${latestVersion} IS AVAILABLE! Update recommended.\nhttps://github.com/ashdogge/ShleyLoggerBot/`
             );
           }
         } catch (error) {

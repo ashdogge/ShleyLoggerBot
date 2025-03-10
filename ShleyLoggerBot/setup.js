@@ -9,7 +9,7 @@ let url = "";
 let timestamps = "";
 let port = "4000"; // Default port
 //Current logger version
-let loggerVersion = "2.5.0";
+let loggerVersion = "2.5.1";
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
