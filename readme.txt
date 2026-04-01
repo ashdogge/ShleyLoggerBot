@@ -1,8 +1,7 @@
 Simple webserver to log Conan Exiles chat to a Discord channel using a discord webhook
 Modified from https://apiconan.totchinuko.fr/#/
 
-Instructions: https://docs.google.com/document/d/1OOgExWKhftTUrlqOEAg37hNKAoRkdQTcBGMrS27CqWg/edit?usp=sharing
-
+Instructions: https://docs.google.com/document/d/1oERlGMcLeWXw3IfbVEiwiMMELHPL_mbsxzN3QncMJPA/edit?usp=sharing
 
 
       .~~~~`\~~\
