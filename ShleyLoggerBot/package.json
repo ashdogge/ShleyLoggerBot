@@ -1,22 +1,39 @@
 {
   "name": "ShleyLoggerBot",
-  "version": "2.5.1",
+  "version": "3.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node server.js",
+    "build": "npx yao-pkg server.js"
   },
   "dependencies": {
-    "axios": "^1.7.9",
+    "axios": "^0.27.2",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "morgan": "~1.9.1"
+    "express": "^4.21.2"
   },
   "devDependencies": {
+    "@yao-pkg/pkg": "^6.14.1",
+    "morgan": "~1.9.1",
     "prettier": "^2.2.1"
   },
-  "main": "app.js",
+  "main": "server.js",
+  "bin": "server.js",
+  "pkg": {
+    "targets": [
+      "node20-win-x64"
+    ],
+    "scripts": [
+      "server.js",
+      "app.js",
+      "menu.js",
+      "setup.js",
+      "version.js",
+      "routes/index.js"
+    ],
+    "noBytecode": true
+  },
   "author": "Shley",
   "license": "ISC",
   "description": "Simple webserver and interface for logging Conan Exiles messages from !ToT"

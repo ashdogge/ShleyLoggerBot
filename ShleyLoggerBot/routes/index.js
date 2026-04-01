@@ -1,14 +1,26 @@
+// routes/message.js
 const express = require("express");
-const router = express.Router();
 const axios = require("axios");
-require("dotenv").config();
+const dotenv = require("dotenv");
+
+dotenv.config(); // load environment variables
+
+const router = express.Router();
 
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL;
-const TIMESTAMPS_ENABLED = process.env.TIMESTAMPS === "true"; // Check if timestamps are enabled
-const MAX_MESSAGE_LENGTH = 1750; // Discord has a 2000-character limit, leaving buffer space
+const TIMESTAMPS_ENABLED = process.env.TIMESTAMPS === "true";
+const MAX_MESSAGE_LENGTH = 1750; // leave some buffer below Discord 2000-char limit
 const UA = "game=ConanSandbox, engine=UE4";
 
-router.get(`/message`, async (req, res) => {
+/**
+ * GET /message
+ * Sends a message to Discord webhook.
+ * Query params:
+ *   - message: string (required)
+ *   - sender: string (optional)
+ *   - character: string (optional)
+ */
+router.get("/message", async (req, res) => {
   try {
     const { message, sender, character } = req.query;
     const userAgent = req.get("User-Agent") || "Unknown";
@@ -17,7 +29,6 @@ router.get(`/message`, async (req, res) => {
       console.warn(`Blocked client mismatch: ${userAgent}`);
       return res.status(403).json({ error: "UA mismatch" });
     }
-
 
     if (!message) {
       return res.status(400).json({ error: "Message cannot be empty." });
@@ -34,23 +45,18 @@ router.get(`/message`, async (req, res) => {
       } catch (error) {
         console.error(
           "Error sending message to Discord:",
-          error.response?.data || error.message
+          error.response?.data || error.message,
         );
       }
     }
 
-    // Split long messages
+    // Split long messages if needed
     if (message.length > MAX_MESSAGE_LENGTH) {
-      console.log(
-        `Message is too long (${message.length} chars), splitting...`
-      );
       const messageParts = [];
-
       for (let i = 0; i < message.length; i += MAX_MESSAGE_LENGTH) {
         messageParts.push(message.substring(i, i + MAX_MESSAGE_LENGTH));
       }
 
-      // Send each part separately
       for (let i = 0; i < messageParts.length; i++) {
         const partContent = TIMESTAMPS_ENABLED
           ? `[${timestamp}] [ **${player} ${charName}** ] (${i + 1}/${
@@ -63,7 +69,6 @@ router.get(`/message`, async (req, res) => {
         await sendToDiscord(partContent);
       }
     } else {
-      // Send normally if the message is short
       const content = TIMESTAMPS_ENABLED
         ? `[${timestamp}] [ **${player} ${charName}** ]: ${message}`
         : `[ **${player} ${charName}** ]: ${message}`;
@@ -75,10 +80,9 @@ router.get(`/message`, async (req, res) => {
   } catch (error) {
     console.error(
       "Error sending message to Discord:",
-      error.response?.data || error.message
+      error.response?.data || error.message,
     );
     res.status(500).json({ error: "Failed to send message to Discord" });
   }
 });
-
 module.exports = router;
