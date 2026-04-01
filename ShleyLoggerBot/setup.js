@@ -9,7 +9,7 @@ module.exports = function runSetup() {
     let url = "";
     let timestamps = "";
     let port = "4000";
-    let loggerVersion = "2.5.1";
+    let loggerVersion = "3.0.0";
 
     console.log("\n=== First-Time Setup Wizard ===\n");
     console.log(
@@ -22,7 +22,7 @@ module.exports = function runSetup() {
       switch (currentStep) {
         case "webhook":
           if (!input.startsWith("https://")) {
-            console.log("❌ Must start with https://");
+            console.log("Must start with https://");
             return;
           }
 

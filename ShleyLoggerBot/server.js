@@ -40,7 +40,7 @@ function restartProcess() {
   const server = http.createServer(app);
 
   server.listen(port, () => {
-    console.log(`🚀 Server running on http://localhost:${port}`);
+    console.log(`Server started on http://localhost:${port}`);
     checkLoggerVersion();
     displayPrompt(port);
   });

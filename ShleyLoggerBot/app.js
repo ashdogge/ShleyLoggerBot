@@ -12,4 +12,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(process.cwd(), "public")));
 app.use("/", indexRouter);
 
+const { rl } = require("./menu.js");
+
+app.use((req, res, next) => {
+  res.on("finish", () => {
+    rl.prompt(true);
+  });
+  next();
+});
+
 module.exports = app;

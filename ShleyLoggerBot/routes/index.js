@@ -8,7 +8,9 @@ dotenv.config(); // load environment variables
 const router = express.Router();
 
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL;
-const TIMESTAMPS_ENABLED = process.env.TIMESTAMPS === "true";
+function timestampsEnabled() {
+  return process.env.TIMESTAMPS === "true";
+}
 const MAX_MESSAGE_LENGTH = 1750; // leave some buffer below Discord 2000-char limit
 const UA = "game=ConanSandbox, engine=UE4";
 
@@ -20,7 +22,7 @@ const UA = "game=ConanSandbox, engine=UE4";
  *   - sender: string (optional)
  *   - character: string (optional)
  */
-router.get("/message", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const { message, sender, character } = req.query;
     const userAgent = req.get("User-Agent") || "Unknown";
@@ -58,7 +60,7 @@ router.get("/message", async (req, res) => {
       }
 
       for (let i = 0; i < messageParts.length; i++) {
-        const partContent = TIMESTAMPS_ENABLED
+        const partContent = timestampsEnabled()
           ? `[${timestamp}] [ **${player} ${charName}** ] (${i + 1}/${
               messageParts.length
             }):\n${messageParts[i]}`
@@ -69,7 +71,7 @@ router.get("/message", async (req, res) => {
         await sendToDiscord(partContent);
       }
     } else {
-      const content = TIMESTAMPS_ENABLED
+      const content = timestampsEnabled()
         ? `[${timestamp}] [ **${player} ${charName}** ]: ${message}`
         : `[ **${player} ${charName}** ]: ${message}`;
 
