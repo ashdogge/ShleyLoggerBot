@@ -64,7 +64,7 @@ LOGGER_VERSION=${loggerVersion}`;
 
       fs.writeFileSync(envFilePath, content);
 
-      console.log("\n✅ Configuration saved!");
+      console.log("\nConfiguration saved!");
       rl.close();
       resolve();
     }
