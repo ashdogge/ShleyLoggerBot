@@ -11,6 +11,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(process.cwd(), "public")));
 app.use("/", indexRouter);
+app.use("/message", indexRouter);
 
 const { rl } = require("./menu.js");
 
