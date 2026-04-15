@@ -1,5 +1,5 @@
 const https = require("https");
-const LOCAL_VERSION = process.env.LOGGER_VERSION || "1.0.0";
+const LOCAL_VERSION = process.env.LOGGER_VERSION || "3.0.1";
 
 function checkLoggerVersion() {
   const url = "https://shleys.bhweb.ws/api/loggerVersionCheck";
